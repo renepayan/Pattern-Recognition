@@ -1,14 +1,23 @@
+%Practica 1
+%Payán Téllez René
+%Romero Lucero Alan
+%Zepeta Rivera Jose Antonio
+
 clc %limpiar pantalla
 clear all %limpiar todo
 close all %cierra todo
 warning off all %Elimina los warnings
 
-%PROGRAMA QUE CALCULA LA TOMA DE DECISIONES ENTRE LAS DOS CLASES DADO UN
-%VECTOR DESCONOCIDO
-
-%INTRODUCIR LOS DATOS DE MIS CLASES
-
-clases = {[1,3,1,2,3;2,3,5,2,3], [6 6 7 8 8; 4 3 4 4 5], rand(2,5)+3, rand(2,5)+5, rand(2,5)-5}; %Arreglo con todas las clases
+%Solicitar del usuario la cantidad de clases
+cantidadDeClases = input("Cuantas clases se deben generar: ");
+clases = {};
+for i = 1:cantidadDeClases
+    cantidadRepresentantes = input("Cuantos representantes tendra la clase "+i+": ");
+    ubicacion = input("Ubicación de la clase "+i+": ");
+    dispersion = input("Dispersion de la clase "+i+": ");
+    clases{i} = (rand(2,cantidadRepresentantes)+ubicacion)*dispersion;
+end
+disp(clases);
 
 vx = input("Dame las coordenadas del vector en x=");
 vy = input("Dame las coordenadas del vector en y=");
@@ -27,11 +36,11 @@ for i = 1:length(clases)
     plot(clases{i}(1,:), clases{i}(2,:),'o','MarkerSize',10,'Color',cmap(i,:)); %Graficar la clase i
 end
 
-%GRAFICANDO LAS CLASES
+%Graficando el vector desconocido
 plot(vector(1,:),vector(2,:), 'ko','MarkerSize',10,'MarkerFaceColor','k'); %Graficar el vector
 
 [minimo,index] = min(distancias); %Se obtiene el valor menor del arreglo
-if minimo > norm(mean(clases{index},2) - [0;0])
+if minimo > norm(mean(clases{index},2) - [0;0]) %Asume que solo puede pertenecer a la clase si su distancia es menor, a la del centroide con respecto al origen
     fprintf("El vector desconocido no pertenece a ninguna clase\n"); %Imprimir que no pertenece
 else
     fprintf("El vector desconocido pertence a la clase: %d\n", index); %Imprimir la clase a la que pertenece
