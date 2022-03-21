@@ -11,16 +11,17 @@ warning off all % Elimina los warnings
 % Solicita del usuario la cantidad de clases
 % y las genera con sus etiquetas para la grafica
 [clases, etiquetas, medias] = generaClases( input("¿Cuantas clases se deben generar?: ") );
-
+FIN_DEL_PROGRAMA = 6;
 n = 1;
-while n ~= 5
+while n ~= FIN_DEL_PROGRAMA
     n = input("¿Que metodo quieres utilizar?\n" + ...
         "1. Distancia euclideana\n" + ...
         "2. Mahalanobis\n" + ...
         "3. Criterio de Bayes\n" + ...
-        "4. Todos los criterios\n" + ...
-        "5. Salir\n");
-    if n == 5
+        "4. Critero de KNN\n"+ ...
+        "5. Todos los criterios\n" + ...
+        "6. Salir\n");
+    if n == FIN_DEL_PROGRAMA
         break;
     end
 
@@ -48,6 +49,8 @@ while n ~= 5
         case 3
             porCriterioBayes(vector, clases, medias);
         case 4
+            porKNN(vector, clases, medias);
+        case 5
             disp("Distancia euclideana");
             porDistanciaEuclideana(vector, medias);
             disp("Mahalanobis");
@@ -56,6 +59,8 @@ while n ~= 5
             porCriterioBayes(vector, clases, medias);
             disp("Criterio de Bayes");
             porCriterioBayes(vector, clases, medias);
+            disp("Por KNN");
+            porKNN(vector, clase, medias);
     end
 
 end
@@ -229,13 +234,31 @@ function porCriterioBayes(x, clases, medias)
     end
     
 end
+
+%Por K Nearest Neighbors (Los K vecinos mas cercanos)
 function porKNN(x, clases, medias)
-    
+    posicionActual = 1;
+    for i=1:length(clases)
+        clase = clases{i};        
+        for j=1:length(clase)
+            elemento = clase(:,j);            
+            %calculando las distancias a todos y cada de los elementos
+            distancias(posicionActual,1) = norm(x-elemento); %Calculamos la distancia del elemento al vector
+            distancias(posicionActual,2) = i; %Guardamos la clase a la que pertenece la distancia
+            posicionActual = posicionActual+1;
+        end 
+    end           
+    lista_ordenada = sortrows(distancias); %Ordenamos el arreglo de distancias para tenerlas por la menor    
+    vecinos = 2;
+    while mod(vecinos,2) == 0
+        vecinos = input('dame el número k de vecinos que deseas clasificar = ');
+        if mod(vecinos,2) == 0
+            disp("El número de vecinos debe ser impar");
+        end
+    end
+    for d=1:vecinos
+        encuentra_clase = lista_ordenada(1:d,2);
+    end
+    encuentra_clase = mode(encuentra_clase);
+    fprintf('el vector pertenece a la clase %d\n',encuentra_clase)
 end
-
-
-
-
-
-
-
